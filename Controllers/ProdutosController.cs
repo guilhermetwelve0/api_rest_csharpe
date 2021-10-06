@@ -46,7 +46,6 @@ namespace APIREST.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-
             try
             {
                 Produto produto = database.Produtos.First(p => p.Id == id);
@@ -105,6 +104,46 @@ namespace APIREST.Controllers
             {
                 Response.StatusCode = 404;
                 return new ObjectResult("");
+            }
+        }
+        [HttpPatch]
+
+        public IActionResult Patch([FromBody] Produto produto)
+        {
+            if (produto.Id > 0)
+            {
+                try
+                {
+                    var p = database.Produtos.First(pTemp => pTemp.Id == produto.Id);
+
+                    if (p != null)
+                    {
+
+                        // Editar
+                        // condicao ? faz algo : faz outra coisa
+                        p.Nome = produto.Nome != null ? produto.Nome : p.Nome;
+                        p.Preco = produto.Preco != 0 ? produto.Preco : p.Preco;
+
+                        database.SaveChanges();
+                        return Ok();
+
+                    }
+                    else
+                    {
+                        Response.StatusCode = 400;
+                        return new ObjectResult(new { msg = "Produto não encontrado" });
+                    }
+                }
+                catch
+                {
+                    Response.StatusCode = 400;
+                    return new ObjectResult(new { msg = "Produto não encontrado" });
+                }
+            }
+            else
+            {
+                Response.StatusCode = 400;
+                return new ObjectResult(new { msg = "Id do produto é inválido " });
             }
         }
 
