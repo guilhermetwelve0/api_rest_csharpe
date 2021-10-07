@@ -52,6 +52,16 @@ namespace APIREST
 
             app.UseAuthorization();
 
+            app.UseSwagger(config =>
+            {
+                config.RouteTemplate = "victor/{documentName}/swagger.json";
+            }); // gerar um arquivo Json - Swagger.json
+
+            app.UseSwaggerUI(config => // Views HTML do Swagger
+            {
+                config.SwaggerEndpoint("/victor/v1/swagger.json", "v1 docs");
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
